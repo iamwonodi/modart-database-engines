@@ -84,13 +84,13 @@ resource "terraform_data" "contract" {
 }
 
 module "engine_ingress" {
-  source   = "git::https://github.com/iamwonodi/terraform-aws-sg-ingress-rule.git?ref=v1.2.1"
+  source   = "git::https://github.com/iamwonodi/terraform-aws-sg-ingress-rule.git?ref=v1.2.2"
   for_each = local.ingress_rules
 
   security_group_id            = local.platform.isolated.security_group_id
   referenced_security_group_id = local.source_security_groups[each.value.tier]
 
-  description = each.value.tier == "tools" ? "${each.value.engine} database engine from the team's tools" : "${each.value.engine} database engine from the ${each.value.tier} tier"
+  description = each.value.tier == "tools" ? "${each.value.engine} database engine from the team tools" : "${each.value.engine} database engine from the ${each.value.tier} tier"
 
   ip_protocol = "tcp"
   from_port   = each.value.port
