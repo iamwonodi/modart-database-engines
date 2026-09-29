@@ -42,7 +42,7 @@ jobs:
 
   deploy:
     name: Deploy (development)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: development
 
     steps:
