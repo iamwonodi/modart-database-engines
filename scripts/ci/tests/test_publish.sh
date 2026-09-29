@@ -6,7 +6,7 @@ REPO_DB="$(cd "${SCRIPTS}/../database" && pwd)"
 IMG="123456789012.dkr.ecr.af-south-1.amazonaws.com/engines/postgres:17-amd64-0123456789ab"
 export FAKE_LOG="${WORK}/calls.log" FAKE_S3_DIR="${WORK}/s3"
 
-fresh(){ rm -rf "${WORK}/db" "${WORK}/s3"; cp -R "${REPO_DB}" "${WORK}/db"; mkdir -p "${WORK}/s3"; : > "${FAKE_LOG}"; : > "${WORK}/images.env"; }
+fresh(){ rm -rf "${WORK}/db" "${WORK}/s3"; cp -R "${REPO_DB}" "${WORK}/db"; jq 'map_values(.active=false)' "${REPO_DB}/registry.json" > "${WORK}/db/registry.json"; mkdir -p "${WORK}/s3"; : > "${FAKE_LOG}"; : > "${WORK}/images.env"; }
 activate(){ jq "$1" "${WORK}/db/registry.json" > "${WORK}/r" && mv "${WORK}/r" "${WORK}/db/registry.json"; }
 run(){ bash "$P" "${WORK}/db" "${WORK}/images.env" acme-development-deploy af-south-1; }
 S3="${WORK}/s3/database"

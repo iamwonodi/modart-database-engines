@@ -7,7 +7,7 @@ REG="123456789012.dkr.ecr.af-south-1.amazonaws.com"
 TAG="17-amd64-0123456789ab"
 export FAKE_LOG="${WORK}/calls.log"
 
-fresh(){ rm -rf "${WORK}/db"; cp -R "${REPO_DB}" "${WORK}/db"; : > "${FAKE_LOG}"; unset FAKE_ECR_REPO_EXISTS FAKE_ECR_TAGS FAKE_INSPECT_FAIL; }
+fresh(){ rm -rf "${WORK}/db"; cp -R "${REPO_DB}" "${WORK}/db"; jq 'map_values(.active=false)' "${REPO_DB}/registry.json" > "${WORK}/db/registry.json"; : > "${FAKE_LOG}"; unset FAKE_ECR_REPO_EXISTS FAKE_ECR_TAGS FAKE_INSPECT_FAIL; }
 activate(){ jq "$1" "${WORK}/db/registry.json" > "${WORK}/r" && mv "${WORK}/r" "${WORK}/db/registry.json"; }
 run(){ bash "$M" "${WORK}/db" "$REG" af-south-1 "${WORK}/images.env"; }
 

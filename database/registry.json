@@ -1,5 +1,5 @@
 {
-  "postgres": { "port": 5432, "active": false },
-  "mysql": { "port": 3306, "active": false },
-  "mongodb": { "port": 27017, "active": false }
+  "postgres": { "port": 5432, "active": true },
+  "mysql": { "port": 3306, "active": true },
+  "mongodb": { "port": 27017, "active": true }
 }
