@@ -8,6 +8,7 @@ This is a **blueprint**: many projects clone it. Never commit anything project-s
 - Read the real files, and core's host scripts they feed (`modules/database/host/assets/update.sh`, `provision.sh`, `modules/platform/host-scripts/assets/deploy-lib.sh`), before proposing a change. Defects live in the seam between the two repositories.
 - Ask before building. Classify review findings CRITICAL / HIGH / MEDIUM / LOW / OPTIONAL, say PASS when something is correct, and do not rewrite working code for style.
 - Comments explain why, not what. Scripts are exercised against real inputs and their error paths before they are called done.
+- File layout: every top-level `locals` block in `locals.tf`, every `data` block in `data.tf`. Workflows run on `ubuntu-24.04`, never `ubuntu-latest`. `scripts/ci/check-file-layout.sh` fails CI otherwise.
 
 ## Contracts with the other repositories
 
@@ -21,6 +22,7 @@ This is a **blueprint**: many projects clone it. Never commit anything project-s
 ```bash
 bash scripts/ci/validate-engines.sh database
 bash scripts/ci/tests/run-all.sh
+bash scripts/ci/check-file-layout.sh .
 terraform fmt -recursive
 (cd infrastructure/development && terraform init -backend=false && terraform validate && terraform test)
 ```
