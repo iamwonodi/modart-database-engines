@@ -27,12 +27,27 @@ variables {
   aws_region   = "af-south-1"
 }
 
-run "the_blueprint_opens_nothing_until_an_engine_is_activated" {
+run "only_the_active_engines_are_opened" {
   command = plan
 
+  # Holds for whatever registry.json says: the blueprint ships every engine
+  # inactive (nothing opened), a project activates some. Each active engine is
+  # published once and reachable from each source group the contract gives
+  # (its tiers and the tools group); an inactive one is neither.
   assert {
-    condition     = length(output.engine_ports) == 0 && length(module.engine_ingress) == 0 && length(aws_ssm_parameter.engine_port) == 0
-    error_message = "the blueprint ships every engine inactive, so no port may be opened or published"
+    condition = (
+      length(output.engine_ports) == length(local.active_engines) &&
+      length(aws_ssm_parameter.engine_port) == length(local.active_engines) &&
+      length(module.engine_ingress) == length(local.active_engines) * length(local.source_security_groups)
+    )
+    error_message = "exactly the active engines must be published and opened, each from every source group"
+  }
+
+  assert {
+    condition = alltrue([
+      for name, entry in local.registry : contains(keys(aws_ssm_parameter.engine_port), name) == try(entry.active, true)
+    ])
+    error_message = "an engine is published if and only if it is active in registry.json"
   }
 
   assert {
