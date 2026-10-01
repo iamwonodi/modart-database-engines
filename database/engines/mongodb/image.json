@@ -1,4 +1,4 @@
 {
-  "source": "mongo:8.0",
+  "source": "mongo:7.0",
   "platform": "linux/amd64"
 }
